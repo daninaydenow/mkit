@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 // import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 
+import { useState } from "react";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -52,6 +54,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = () => {
+  const [searchState, setSearchState] = useState("");
+
+  const searchStateHandler = (e) => {
+    const currentSearchValue = e.target.value;
+    return setSearchState(currentSearchValue);
+  };
+
+  const searchHandler = (e) => {
+    console.log(searchState);
+    // return setSearchState("");
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -71,6 +84,9 @@ const Navbar = () => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              name="search"
+              value={searchState}
+              onChange={searchStateHandler}
             />
           </Search>
           <Button
@@ -79,6 +95,7 @@ const Navbar = () => {
               paddingInline: "2rem",
               marginInline: "1rem",
             }}
+            onClick={searchHandler}
           >
             Search
           </Button>
