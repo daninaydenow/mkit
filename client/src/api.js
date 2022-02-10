@@ -8,6 +8,15 @@ const getAll = async () => {
   }
 };
 
+const getOne = async (showId) => {
+  try {
+    return await fetch(`${baseUrl}/shows/${showId}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
   getAll,
+  getOne,
 };
