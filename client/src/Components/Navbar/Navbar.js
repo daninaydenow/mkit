@@ -75,7 +75,7 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            My Movie Collection
+            Cinema Fanatics
           </Typography>
           <Search>
             <SearchIconWrapper>
