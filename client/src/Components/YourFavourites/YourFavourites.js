@@ -31,7 +31,11 @@ const YourFavourites = () => {
         >
           Your Favourites
         </Typography>
-        <Grid container spacing={5}>
+        <Grid
+          container
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+          className="main-container"
+        >
           {showsState.map((x) => (
             <YourFavouritesCard key={x.id} {...x} />
           ))}
