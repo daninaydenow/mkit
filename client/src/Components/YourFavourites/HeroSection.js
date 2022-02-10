@@ -16,11 +16,11 @@ const HeroSection = () => {
           margin: "30px",
         }}
       >
-        <Typography variant="h3" component="h1">
+        <Typography variant="h4" component="h1">
           Welcome to Cinema Fanatics
         </Typography>
         <Typography
-          variant="h5"
+          variant="subtitle1"
           component="p"
           style={{
             maxWidth: "400px",
