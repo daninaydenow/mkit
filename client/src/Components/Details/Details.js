@@ -8,6 +8,8 @@ import {
   Typography,
   Link,
   Button,
+  Rating,
+  TextField,
 } from "@mui/material";
 import api from "../../api";
 
@@ -27,16 +29,29 @@ const Details = () => {
   console.log(currentShow);
   let premiered;
   let genres;
+
   if (currentShow !== "") {
     premiered = currentShow.premiered.split("-")[0];
     genres = currentShow.genres.join(", ");
   }
 
+  const removeFromFavouritesBtn = (
+    <Button
+      variant="outlined"
+      color="error"
+      style={{ maxWidth: "12rem", padding: "0.75rem" }}
+    >
+      Remove From Favourites
+    </Button>
+  );
+
   return (
     <Container>
-      <Box marginY={"5rem"} sx={{ display: "flex", maxHeight: "30rem" }}>
+      <Box marginY={"3rem"} sx={{ display: "flex", maxHeight: "30rem" }}>
         <Box>
-          <Card sx={{ minHeight: "100%", minWidth: "15rem" }}>
+          <Card
+            sx={{ minHeight: "100%", maxHeight: "28rem", minWidth: "15rem" }}
+          >
             <CardMedia
               component="img"
               height="100%"
@@ -74,6 +89,32 @@ const Details = () => {
             Add to favourites
           </Button>
         </Box>
+      </Box>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          paddingBottom: "2rem",
+          height: "16rem",
+        }}
+      >
+        <Typography variant="h4" component="h1">
+          Your Review
+        </Typography>
+        <Rating
+          name="simple-controlled"
+          // value={value}
+          // onChange={(event, newValue) => {
+          //   setValue(newValue);
+          // }}
+        />
+        <TextField
+          id="outlined-multiline-static"
+          label="Personal Comments and notes"
+          multiline
+          rows={4}
+        />
       </Box>
     </Container>
   );
