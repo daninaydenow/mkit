@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 const YourFavouritesCard = ({ ...props }) => {
   return (
     <Grid item xs={3}>
-      <Card sx={{ maxHeight: "22.5rem" }}>
-        <CardActionArea>
+      <CardActionArea>
+        <Card sx={{ maxHeight: "22.5rem" }}>
           <Link to={`/shows/${props.id}`}>
             <CardMedia
               component="img"
@@ -14,8 +14,8 @@ const YourFavouritesCard = ({ ...props }) => {
               alt="..."
             />
           </Link>
-        </CardActionArea>
-      </Card>
+        </Card>
+      </CardActionArea>
     </Grid>
   );
 };
