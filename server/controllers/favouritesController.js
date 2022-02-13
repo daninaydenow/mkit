@@ -1,4 +1,4 @@
-const Favourites = require("../models/goalModel");
+const Favourites = require("../models/FavouritesModel");
 
 // @desc Get goals
 // @route GET api/goals
