@@ -6,7 +6,7 @@ const logger = require("morgan");
 const connectDB = require("./config/db");
 
 const favouriteRoutes = require("./routes/favourites");
-const usersRouter = require("./routes/users");
+const userRoutes = require("./routes/userRoutes");
 
 connectDB();
 const app = express();
@@ -21,8 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", favouriteRoutes);
-app.use("/users", usersRouter);
+app.use("/api/favourites", favouriteRoutes);
+app.use("/api/users", userRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
