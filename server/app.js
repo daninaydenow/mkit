@@ -1,6 +1,8 @@
+const path = require("path")
+require("dotenv").config({path: path.resolve(__dirname, '../.env')});
+
 const createError = require("http-errors");
 const express = require("express");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const connectDB = require("./config/db");
