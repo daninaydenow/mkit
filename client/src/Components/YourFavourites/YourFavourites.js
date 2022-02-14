@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Grid, Container, Typography } from "@mui/material";
+import { useAuth } from "../../contexts/AuthContext";
 
 import api from "../../api";
 import YourFavouritesCard from "./YourVafouritesCard";
@@ -7,6 +8,7 @@ import HeroSection from "./HeroSection";
 
 const YourFavourites = () => {
   const [showsState, setShowsState] = useState([]);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     api
@@ -29,7 +31,7 @@ const YourFavourites = () => {
           textAlign={"center"}
           marginY={"2rem"}
         >
-          Your Favourites
+          {`${currentUser.username}'s Favourites`}
         </Typography>
         <Grid
           container
