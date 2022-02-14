@@ -1,5 +1,7 @@
+import { useAuth } from "../../contexts/AuthContext";
 import { Box, Button, Typography } from "@mui/material";
 const HeroSection = () => {
+  const { currentUser } = useAuth();
   return (
     <Box
       style={{
