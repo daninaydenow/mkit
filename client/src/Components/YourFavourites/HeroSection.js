@@ -1,7 +1,6 @@
-import { useAuth } from "../../contexts/AuthContext";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 const HeroSection = () => {
-  const { currentUser } = useAuth();
   return (
     <Box
       style={{
@@ -29,20 +28,27 @@ const HeroSection = () => {
           component="p"
           style={{
             maxWidth: "400px",
+            marginBlockEnd: "20px",
           }}
         >
           Bingewatch all your favourite shows in one place. Explore from a vast
           selection of comedies, drama, horror or sci-fi! Just one click away !
           Find your favourite show now !
         </Typography>
-        <Button
+        <Link
+          to="/search"
           variant="contained"
           style={{
-            margin: "20px",
+            textDecoration: "none",
+            color: "#42a5f5",
+            backgroundColor: "white",
+            borderRadius: "10px",
+            paddingInline: "1rem",
+            paddingBlock: ".5rem",
           }}
         >
           Search
-        </Button>
+        </Link>
       </Box>
     </Box>
   );
