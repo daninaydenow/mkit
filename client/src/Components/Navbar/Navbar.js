@@ -1,15 +1,16 @@
 import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-// import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import Button from "@mui/material/Button";
-// import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  InputBase,
+  Button,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,6 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Navbar = () => {
   const [searchState, setSearchState] = useState("");
+  const { currentUser } = useAuth();
 
   const searchStateHandler = (e) => {
     const currentSearchValue = e.target.value;
@@ -65,6 +67,44 @@ const Navbar = () => {
     console.log(searchState);
     // return setSearchState("");
   };
+
+  const userButtons = (
+    <Link
+      to="/logout"
+      style={{
+        textDecoration: "none",
+        color: "white",
+        paddingInline: ".5rem",
+      }}
+    >
+      Logout
+    </Link>
+  );
+
+  const guestButtons = (
+    <>
+      <Link
+        to="/login"
+        style={{
+          textDecoration: "none",
+          color: "white",
+          paddingInline: ".5rem",
+        }}
+      >
+        Login
+      </Link>
+      <Link
+        to="/register"
+        style={{
+          textDecoration: "none",
+          color: "white",
+          paddingInline: ".5rem",
+        }}
+      >
+        Register
+      </Link>
+    </>
+  );
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -99,6 +139,17 @@ const Navbar = () => {
           >
             Search
           </Button>
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              paddingInline: ".5rem",
+            }}
+          >
+            Home
+          </Link>
+          {currentUser ? userButtons : guestButtons}
         </Toolbar>
       </AppBar>
     </Box>
