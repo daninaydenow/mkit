@@ -1,11 +1,19 @@
-const path = require("path")
-require("dotenv").config({path: path.resolve(__dirname, '../.env')});
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
+const cors = require("cors");
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
 const createError = require("http-errors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const connectDB = require("./config/db");
+const { errorHandler } = require("./middleWare/errorMiddleware");
 
 const favouriteRoutes = require("./routes/favourites");
 const userRoutes = require("./routes/userRoutes");
@@ -17,6 +25,7 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,14 +41,6 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
-});
+app.use(errorHandler);
 
 module.exports = app;
