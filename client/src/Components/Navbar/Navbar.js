@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -115,7 +115,9 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            Cinema Fanatics
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              Cinema Fanatics
+            </Link>
           </Typography>
           <Search>
             <SearchIconWrapper>
