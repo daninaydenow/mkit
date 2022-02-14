@@ -10,11 +10,12 @@ import {
   Button,
 } from "@mui/material";
 import { validate } from "../../helpers/validateForm";
-import { login } from "../../endPoints/authApi";
+import { useAuth } from "../../contexts/AuthContext";
 
 const initialFormValues = { email: "", password: "" };
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -23,10 +24,7 @@ const Login = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       const data = { email: formValues.email, password: formValues.password };
       login(data)
-        .then((res) => res.json())
-        .then((user) => {
-          console.log(user);
-          localStorage.setItem("user", JSON.stringify(user));
+        .then(() => {
           navigate("/");
         })
         .catch((error) => {
