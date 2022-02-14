@@ -31,7 +31,9 @@ const YourFavourites = () => {
           textAlign={"center"}
           marginY={"2rem"}
         >
-          {`${currentUser.username}'s Favourites`}
+          {currentUser
+            ? currentUser.username + "'s Favourites"
+            : "Register or login to see your favourites !"}
         </Typography>
         <Grid
           container
