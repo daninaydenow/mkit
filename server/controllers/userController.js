@@ -8,6 +8,7 @@ const asyncHandler = require("express-async-handler");
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
+  console.log({ username, email, password });
   if (!username || !email || !password) {
     res.status(400);
     throw new Error("Please add all fields!");
