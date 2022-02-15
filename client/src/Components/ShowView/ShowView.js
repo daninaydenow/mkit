@@ -21,14 +21,26 @@ const ShowView = ({ props }) => {
     genres = props.genres.join(", ");
   }
 
-  const addToFavouritesHandler = async (e) => {
+  const addToFavouritesHandler = (e) => {
     e.preventDefault();
     serverApi
       .addToFavourites(props.id, currentUser.token)
       .then((res) => res.json())
       .then((result) => {
-        setIsSetFavouriteState(true);
-      });
+        setIsSetFavouriteState(!isSetFavourite);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const removeFromFavouritesHandler = (e) => {
+    e.preventDefault();
+    serverApi
+      .removeFromFavourites(props.id, currentUser.token)
+      .then((res) => res.json())
+      .then((result) => {
+        setIsSetFavouriteState(!isSetFavourite);
+      })
+      .catch((err) => console.log(err));
   };
 
   const addToFavouritesBtn = (
@@ -47,6 +59,7 @@ const ShowView = ({ props }) => {
       variant="outlined"
       color="error"
       style={{ maxWidth: "12rem", padding: "0.75rem" }}
+      onClick={removeFromFavouritesHandler}
     >
       Remove from favourites
     </Button>
