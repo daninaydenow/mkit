@@ -15,7 +15,7 @@ const logger = require("morgan");
 const connectDB = require("./config/db");
 const { errorHandler } = require("./middleWare/errorMiddleware");
 
-const favouriteRoutes = require("./routes/favourites");
+const favouriteRoutes = require("./routes/favouriteRoutes");
 const userRoutes = require("./routes/userRoutes");
 
 connectDB();
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/favourites", favouriteRoutes);
+app.use("/api/favourite", favouriteRoutes);
 app.use("/api/users", userRoutes);
 
 // catch 404 and forward to error handler
