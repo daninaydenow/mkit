@@ -1,19 +1,46 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import { Container, Typography, TextField, Box, Button } from "@mui/material";
-import api from "../../api";
+import moviesApi from "../../endPoints/moviesApi";
+import serverApi from "../../endPoints/serverApi";
 import ShowView from "../ShowView/ShowView";
 
 const SearchPage = () => {
-  const [shows, setAllShows] = useState([]);
+  const [showsState, setAllShows] = useState([]);
+  const [favouritesState, setFavouritesState] = useState([]);
+  const { currentUser } = useAuth();
+  const favouritesNotEmpty = favouritesState.length === 0;
 
   useEffect(() => {
-    api
+    if (currentUser && favouritesNotEmpty) {
+      serverApi
+        .getFavourites(currentUser.token)
+        .then((res) => res.json())
+        .then((result) => {
+          setFavouritesState(result.map((x) => x.movieId));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    moviesApi
       .getAll()
       .then((res) => res.json())
       .then((result) => {
-        setAllShows(result.slice(0, 40));
+        setAllShows(result);
       });
-  }, []);
+  }, [currentUser, favouritesNotEmpty]);
+
+  const showsChekecForFavourites = JSON.parse(JSON.stringify(showsState));
+  showsChekecForFavourites.map((x) => {
+    if (favouritesState.includes(x.id.toString())) {
+      x.isUserFavourite = true;
+      return x;
+    } else {
+      x.isUserFavourite = false;
+      return x;
+    }
+  });
 
   return (
     <Container>
@@ -46,7 +73,7 @@ const SearchPage = () => {
         </Button>
       </Box>
 
-      {shows.map((show) => (
+      {showsChekecForFavourites.map((show) => (
         <ShowView key={show.id} props={show} />
       ))}
     </Container>
