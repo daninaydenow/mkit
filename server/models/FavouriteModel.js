@@ -6,8 +6,8 @@ const favouriteSchema = mongoose.Schema({
     requireed: true,
     ref: "User",
   },
-  favourites: {
-    type: Object,
+  movieId: {
+    type: String,
   },
 });
 
