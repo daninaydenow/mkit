@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import {
   Container,
   Box,
@@ -8,35 +9,49 @@ import {
   Rating,
   TextField,
 } from "@mui/material";
-import api from "../../api";
+import moviesApi from "../../endPoints/moviesApi";
+import serverApi from "../../endPoints/serverApi";
 import ShowView from "../ShowView/ShowView";
 
 const DetailsPage = () => {
   const [currentShow, setCurrentShow] = useState("");
+  const [favouritesState, setFavouritesState] = useState([]);
+  const { currentUser } = useAuth();
   const { showId } = useParams();
 
   useEffect(() => {
-    api
+    // get user favourites
+    if (currentUser && favouritesState.length === 0) {
+      serverApi
+        .getFavourites(currentUser.id, currentUser.token)
+        .then((res) => res.json())
+        .then((result) => {
+          setFavouritesState(result.map((x) => x.movieId));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    // get specific show
+    moviesApi
       .getOne(showId)
       .then((res) => res.json())
       .then((result) => {
         setCurrentShow(result);
       });
-  }, [showId]);
+  }, [showId, currentUser, favouritesState.length === 0]);
 
-  const removeFromFavouritesBtn = (
-    <Button
-      variant="outlined"
-      color="error"
-      style={{ maxWidth: "12rem", padding: "0.75rem" }}
-    >
-      Remove From Favourites
-    </Button>
-  );
+  // check if current show is user favourite
+  const modifiedSow = currentShow;
+  if (favouritesState.includes(currentShow.id.toString())) {
+    modifiedSow.isUserFavourite = true;
+  } else {
+    modifiedSow.isUserFavourite = false;
+  }
 
   return (
     <Container>
-      <ShowView props={currentShow} />
+      <ShowView props={modifiedSow} />
       <Box
         style={{
           display: "flex",
