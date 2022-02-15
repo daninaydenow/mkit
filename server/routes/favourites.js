@@ -7,7 +7,9 @@ const {
   deleteFavourite,
 } = require("../controllers/favouriteController");
 
-router.route("/").get(getFavourites).post(setFavourite);
-router.route("/:id").delete(deleteFavourite).put(updateFavourite);
+const protect = require("../middleWare/authMiddleware");
+
+router.route("/").get(protect, getFavourites).post(protect, setFavourite);
+router.route("/:id").delete(protect, deleteFavourite).put(updateFavourite);
 
 module.exports = router;
