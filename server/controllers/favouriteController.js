@@ -29,19 +29,19 @@ const setFavourite = asyncHandler(async (req, res) => {
 // @desc Delete favourite
 // @route Delete api/favourite/:id
 // @access Private
-const deleteFavourite = async (req, res) => {
-  const favourite = await Favourite.findById(req.body.movieId);
+const deleteFavourite = asyncHandler(async (req, res) => {
+  const favourite = await Favourite.find({ movieId: req.params.id });
   if (!favourite) {
     res.status(400);
     throw new Error("Favourite not found");
   }
-  const deletedFavourite = await Favourite.findByIdAndDelete(req.body.movieId);
+  console.log(favourite);
+  const deletedFavourite = await Favourite.findByIdAndDelete(favourite[0]._id);
   res.status(200).json(deletedFavourite);
-};
+});
 
 module.exports = {
   getFavourites,
   setFavourite,
-  updateFavourite,
   deleteFavourite,
 };
