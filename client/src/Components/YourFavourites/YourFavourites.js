@@ -2,24 +2,46 @@ import { useEffect, useState } from "react";
 import { Grid, Container, Typography } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 
-import api from "../../api";
+import moviesApi from "../../endPoints/moviesApi";
+import serverApi from "../../endPoints/serverApi";
 import YourFavouritesCard from "./YourVafouritesCard";
 import HeroSection from "./HeroSection";
 
 const YourFavourites = () => {
   const [showsState, setShowsState] = useState([]);
+  const [favouritesState, setFavouritesState] = useState([]);
   const { currentUser } = useAuth();
-
+  const favouritesNotEmpty = favouritesState.length === 0;
   useEffect(() => {
-    api
+    if (currentUser && favouritesNotEmpty) {
+      serverApi
+        .getFavourites(currentUser.token)
+        .then((res) => res.json())
+        .then((result) => {
+          setFavouritesState(result.map((x) => x.movieId));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    moviesApi
       .getAll()
       .then((response) => response.json())
-      .then((res) => {
-        setShowsState(res.slice(0, 40));
+      .then((result) => {
+        setShowsState(result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-  }, []);
+  }, [currentUser, favouritesNotEmpty]);
 
-  console.log(showsState);
+  const myFavouritesPopulated = [];
+  favouritesState.forEach((id) => {
+    myFavouritesPopulated.push(
+      showsState.filter((show) => show.id.toString() === id.toString())[0]
+    );
+  });
 
   return (
     <>
@@ -40,9 +62,11 @@ const YourFavourites = () => {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           className="main-container"
         >
-          {showsState.map((x) => (
-            <YourFavouritesCard key={x.id} {...x} />
-          ))}
+          {favouritesState
+            ? myFavouritesPopulated.map((x) => (
+                <YourFavouritesCard key={x.id} {...x} />
+              ))
+            : ""}
         </Grid>
       </Container>
     </>
