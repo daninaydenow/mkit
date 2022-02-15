@@ -21,7 +21,17 @@ const addToFavourites = (movieId, token) => {
   });
 };
 
+const removeFromFavourites = (movieId, token) => {
+  return fetch(`${baseUrl}/${movieId}`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export default {
   getFavourites,
   addToFavourites,
+  removeFromFavourites,
 };
