@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Container, Typography, TextField, Box, Button } from "@mui/material";
 import moviesApi from "../../endPoints/moviesApi";
@@ -6,10 +7,11 @@ import serverApi from "../../endPoints/serverApi";
 import ShowView from "../ShowView/ShowView";
 
 const SearchPage = () => {
-  const [showsState, setAllShows] = useState([]);
   const [favouritesState, setFavouritesState] = useState([]);
-  const { currentUser } = useAuth();
   const favouritesNotEmpty = favouritesState.length === 0;
+  const { currentUser } = useAuth();
+  const { state } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser && favouritesNotEmpty) {
@@ -23,24 +25,43 @@ const SearchPage = () => {
           console.log(err);
         });
     }
-    moviesApi
-      .getAll()
-      .then((res) => res.json())
-      .then((result) => {
-        setAllShows(result);
-      });
   }, [currentUser, favouritesNotEmpty]);
+  let showsChekecForFavourites;
+  if (state) {
+    let shows = state.map((x) => x.show);
+    showsChekecForFavourites = JSON.parse(JSON.stringify(shows));
+    console.log(shows);
+    showsChekecForFavourites.map((x) => {
+      if (favouritesState.includes(x.id.toString())) {
+        x.isUserFavourite = true;
+        return x;
+      } else {
+        x.isUserFavourite = false;
+        return x;
+      }
+    });
+  }
 
-  const showsChekecForFavourites = JSON.parse(JSON.stringify(showsState));
-  showsChekecForFavourites.map((x) => {
-    if (favouritesState.includes(x.id.toString())) {
-      x.isUserFavourite = true;
-      return x;
-    } else {
-      x.isUserFavourite = false;
-      return x;
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const showName = formData.get("search");
+    if (showName.trim() === "") {
+      return;
     }
-  });
+    if (typeof showName.trim() !== "string") {
+      return;
+    }
+    moviesApi
+      .search(showName.trim())
+      .then((res) => res.json())
+      .then((shows) => {
+        if (shows.length === 0) {
+          navigate("/search", { state: { message: "No shows to show" } });
+        }
+        navigate("/search", { state: shows });
+      });
+  };
 
   return (
     <Container>
@@ -52,30 +73,43 @@ const SearchPage = () => {
         <Typography variant="h4" component="h1" style={{ margin: "1rem" }}>
           Search
         </Typography>
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Search"
-          placeholder="Search by movie title ..."
-          multiline
-          maxRows={4}
-          // value={value}
-          // onChange={handleChange}
-        />
-        <Button
-          variant="outlined"
-          color="success"
-          style={{
-            padding: "13px",
-            marginInline: "1rem",
-          }}
-        >
-          Search
-        </Button>
+        <form onSubmit={submitHandler}>
+          <TextField
+            id="outlined-multiline-flexible"
+            label="Search"
+            placeholder="Search by movie title ..."
+            name="search"
+            multiline
+            maxRows={4}
+          />
+          <Button
+            type="submit"
+            variant="outlined"
+            color="success"
+            style={{
+              padding: "13px",
+              marginInline: "1rem",
+            }}
+          >
+            Search
+          </Button>
+        </form>
       </Box>
 
-      {showsChekecForFavourites.map((show) => (
-        <ShowView key={show.id} props={show} />
-      ))}
+      {showsChekecForFavourites ? (
+        showsChekecForFavourites.map((x) => <ShowView key={x.id} show={x} />)
+      ) : (
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{ textAlign: "center", marginTop: "3rem" }}
+        >
+          No shows to display
+          <Typography variant="subtitle1" component="p">
+            Use the search bar above to view shows...
+          </Typography>
+        </Typography>
+      )}
     </Container>
   );
 };
