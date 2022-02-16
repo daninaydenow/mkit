@@ -12,6 +12,7 @@ const YourFavourites = () => {
   const [favouritesState, setFavouritesState] = useState([]);
   const { currentUser } = useAuth();
   const favouritesNotEmpty = favouritesState.length === 0;
+
   useEffect(() => {
     if (currentUser && favouritesNotEmpty) {
       serverApi
@@ -24,25 +25,25 @@ const YourFavourites = () => {
           console.log(err);
         });
     }
-
     moviesApi
       .getAll()
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         setShowsState(result);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [currentUser, favouritesNotEmpty]);
+  console.log(showsState);
 
   const myFavouritesPopulated = [];
   favouritesState.forEach((id) => {
     myFavouritesPopulated.push(
-      showsState.filter((show) => show.id.toString() === id.toString())[0]
+      showsState.filter((show) => show.id?.toString() === id?.toString())[0]
     );
   });
-  console.log(myFavouritesPopulated);
 
   return (
     <>
