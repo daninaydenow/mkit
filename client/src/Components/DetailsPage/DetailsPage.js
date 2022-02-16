@@ -13,6 +13,8 @@ const DetailsPage = () => {
   const { showId } = useParams();
   const favouritesNotEmpty = favouritesState.length === 0;
 
+  console.log(currentShow);
+
   useEffect(() => {
     // get user favourites
     if (currentUser && favouritesNotEmpty) {
@@ -47,7 +49,7 @@ const DetailsPage = () => {
 
   return (
     <Container>
-      <ShowView props={modifiedShow} />
+      <ShowView show={modifiedShow} />
       <Box
         style={{
           display: "flex",
