@@ -1,16 +1,16 @@
 import { Grid, Card, CardActionArea, CardMedia } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const YourFavouritesCard = ({ ...props }) => {
+const YourFavouritesCard = ({ id, image }) => {
   return (
     <Grid item xs={3}>
       <CardActionArea>
         <Card sx={{ maxHeight: "22.5rem" }}>
-          <Link to={`/shows/${props.id}`}>
+          <Link to={`/shows/${id}`}>
             <CardMedia
               component="img"
               height="100%"
-              image={props.image.medium}
+              image={image?.medium}
               alt="..."
             />
           </Link>
