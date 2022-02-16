@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   CardMedia,
@@ -11,34 +11,36 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import serverApi from "../../endPoints/serverApi";
 
-const ShowView = ({ props }) => {
-  const [isSetFavourite, setIsSetFavouriteState] = useState(false);
+const ShowView = ({ show }) => {
+  const [isFavourite, setFavourite] = useState(undefined);
   const { currentUser } = useAuth();
+  useEffect(() => {
+    setFavourite(show.isUserFavourite);
+  }, [show.isUserFavourite]);
+
   let premiered;
   let genres;
-  if (props !== "") {
-    premiered = props.premiered.split("-")[0];
-    genres = props.genres.join(", ");
+  if (show !== "") {
+    premiered = show.premiered !== null ? show.premiered.split("-")[0] : "";
+    genres = show.genres !== null ? show.genres.join(", ") : "";
   }
 
   const addToFavouritesHandler = (e) => {
-    e.preventDefault();
     serverApi
-      .addToFavourites(props.id, currentUser.token)
+      .addToFavourites(show.id, currentUser.token)
       .then((res) => res.json())
       .then((result) => {
-        setIsSetFavouriteState(!isSetFavourite);
+        setFavourite(true);
       })
       .catch((err) => console.log(err));
   };
 
   const removeFromFavouritesHandler = (e) => {
-    e.preventDefault();
     serverApi
-      .removeFromFavourites(props.id, currentUser.token)
+      .removeFromFavourites(show.id, currentUser.token)
       .then((res) => res.json())
       .then((result) => {
-        setIsSetFavouriteState(!isSetFavourite);
+        setFavourite(false);
       })
       .catch((err) => console.log(err));
   };
@@ -70,13 +72,13 @@ const ShowView = ({ props }) => {
       <Box>
         <Card sx={{ minHeight: "100%", maxHeight: "28rem", minWidth: "15rem" }}>
           <CardActionArea>
-            <Link to={`/shows/${props.id}`}>
+            <Link to={`/shows/${show.id}`}>
               <CardMedia
                 component="img"
                 height="100%"
                 width="100%"
-                image={props.image?.medium}
-                alt="..."
+                image={show.image?.medium}
+                alt="show poster"
               />
             </Link>
           </CardActionArea>
@@ -92,24 +94,24 @@ const ShowView = ({ props }) => {
         }}
       >
         <Link
-          to={`/shows/${props.id}`}
+          to={`/shows/${show.id}`}
           style={{ textDecoration: "none", color: "black" }}
         >
           <Typography variant="h4" component="h1">
-            {props.name} ({premiered})
+            {show.name} ({premiered})
           </Typography>
         </Link>
         <Typography variant="body2" component="p">
-          {genres} | {props.runtime} minutes
+          {genres} | {show.runtime} minutes
         </Typography>
         <Typography variant="body2" component="p">
-          {props.summary}
+          {show.summary}
         </Typography>
-        <Link to={props.officialSite ? props.officialSite : ""}>
+        <Link to={show.officialSite ? show.officialSite : ""}>
           Visit official Site
         </Link>
         {currentUser
-          ? props.isUserFavourite
+          ? isFavourite
             ? removeFromFavouritesBtn
             : addToFavouritesBtn
           : ""}
