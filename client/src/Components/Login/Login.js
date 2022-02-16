@@ -77,6 +77,7 @@ const Login = () => {
             We'll never share your email.
           </FormHelperText>
         </FormControl>
+        <FormControl sx={{ width: "350px", margin: ".5rem" }}></FormControl>
         <FormControl sx={{ width: "350px", margin: ".5rem" }}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <Input
