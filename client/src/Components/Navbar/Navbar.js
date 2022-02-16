@@ -8,9 +8,9 @@ import {
   Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import moviesApi from "../../endPoints/moviesApi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,17 +55,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = () => {
-  const [searchState, setSearchState] = useState("");
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
 
-  const searchStateHandler = (e) => {
-    const currentSearchValue = e.target.value;
-    return setSearchState(currentSearchValue);
-  };
-
-  const searchHandler = (e) => {
-    console.log(searchState);
-    // return setSearchState("");
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const showName = formData.get("search");
+    console.log(typeof showName.trim());
+    if (showName.trim() === "") {
+      return;
+    }
+    if (typeof showName.trim() !== "string") {
+      return;
+    }
+    moviesApi
+      .search(showName.trim())
+      .then((res) => res.json())
+      .then((shows) => {
+        if (shows.length === 0) {
+          navigate("/search", { state: { message: "No shows to show" } });
+        }
+        navigate("/search", { state: shows });
+      });
   };
 
   const userButtons = (
@@ -119,28 +131,29 @@ const Navbar = () => {
               Cinema Fanatics
             </Link>
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              name="search"
-              value={searchState}
-              onChange={searchStateHandler}
-            />
-          </Search>
-          <Button
-            style={{
-              backgroundColor: "white",
-              paddingInline: "2rem",
-              marginInline: "1rem",
-            }}
-            onClick={searchHandler}
-          >
-            Search
-          </Button>
+          <form style={{ display: "flex" }} onSubmit={submitHandler}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                name="search"
+              />
+            </Search>
+
+            <Button
+              style={{
+                backgroundColor: "white",
+                paddingInline: "2rem",
+                marginInline: "1rem",
+              }}
+              type="submit"
+            >
+              Search
+            </Button>
+          </form>
           <Link
             to="/"
             style={{
