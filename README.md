@@ -2,8 +2,8 @@
 �
 �
 
-Start client 
+##Start client## 
 cd into client and type "npm start"
 
-Start server
+##Start server##
 cd into server and type "npm start"
