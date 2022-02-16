@@ -16,7 +16,16 @@ const getOne = async (showId) => {
   }
 };
 
+const search = async (showName) => {
+  try {
+    return await fetch(`${baseUrl}/search/shows?q=${showName}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
   getAll,
   getOne,
+  search,
 };
