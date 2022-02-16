@@ -42,6 +42,7 @@ const YourFavourites = () => {
       showsState.filter((show) => show.id.toString() === id.toString())[0]
     );
   });
+  console.log(myFavouritesPopulated);
 
   return (
     <>
@@ -64,7 +65,7 @@ const YourFavourites = () => {
         >
           {favouritesState
             ? myFavouritesPopulated.map((x) => (
-                <YourFavouritesCard key={x.id} {...x} />
+                <YourFavouritesCard key={x?.id} {...x} />
               ))
             : ""}
         </Grid>
